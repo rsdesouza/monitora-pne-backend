@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,16 +35,15 @@ public class EstrategiaSteps {
 
     @When("eu envio a solicitação para criar a estratégia")
     public void enviarSolicitacaoCriacao() throws Exception {
-        response = mockMvc.perform(post("/api/estrategias")
+        response = mockMvc.perform(MockMvcRequestBuilders.post("/api/estrategias")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(novaEstrategiaJson))
-                .andExpect(status().isCreated()) // Verifica se o status é 201
                 .andReturn();
     }
 
     @Then("a estratégia é criada com sucesso")
     public void validarCriacao() {
-        int statusCode = response.getResponse().getStatus();
-        Assertions.assertEquals(201, statusCode, "Verificando se o status é 201 Created");
+        Assertions.assertEquals(201, response.getResponse().getStatus(),
+                "Verificando se o status é 201 Created");
     }
 }

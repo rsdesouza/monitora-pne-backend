@@ -117,7 +117,9 @@
 				<version>3.0.0-M7</version>
 				<configuration>
 					<includes>
-						<include>**/CucumberTest.java</include>
+						<include>**/*Test.java</include>
+						<include>**/*Tests.java</include>
+						<include>**/*CucumberTest.java</include>
 					</includes>
 				</configuration>
 			</plugin>
