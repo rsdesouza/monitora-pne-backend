@@ -5,25 +5,27 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class EstrategiaSteps {
 
+    private String url = "http://localhost:8080/api/estrategias";
+    private ResponseEntity<String> response;
+
     @Autowired
-    private MockMvc mockMvc;
+    private RestTemplate restTemplate;
 
     private String novaEstrategiaJson;
-    private MvcResult response;
 
     @Given("que eu tenha uma nova estratégia válida")
     public void prepararNovaEstrategia() {
+        // Definindo a estratégia no formato JSON
         novaEstrategiaJson = """
         {
             "nome": "Nova Estratégia",
@@ -34,16 +36,17 @@ public class EstrategiaSteps {
     }
 
     @When("eu envio a solicitação para criar a estratégia")
-    public void enviarSolicitacaoCriacao() throws Exception {
-        response = mockMvc.perform(MockMvcRequestBuilders.post("/api/estrategias")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(novaEstrategiaJson))
-                .andReturn();
+    public void enviarSolicitacaoCriacao() throws InterruptedException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(novaEstrategiaJson, headers);
+        Thread.sleep(5000); // Aguarde 5 segundos
+        response = restTemplate.postForEntity(url, request, String.class);
     }
 
     @Then("a estratégia é criada com sucesso")
     public void validarCriacao() {
-        Assertions.assertEquals(201, response.getResponse().getStatus(),
-                "Verificando se o status é 201 Created");
+        Assertions.assertEquals(201, response.getStatusCodeValue(), "Verificando se o status é 201 Created");
     }
 }
