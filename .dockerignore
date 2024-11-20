@@ -1,0 +1,4 @@
+# Ignorar arquivos e diretórios desnecessários
+*.log
+target/test-classes/
+target/generated-sources/
