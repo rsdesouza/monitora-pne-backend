@@ -1,0 +1,42 @@
+[
+  {
+    "request": {
+      "method": "POST",
+      "url": "/api/estrategias",
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$[?(@.nome == 'Nova Estratégia')]"
+        }
+      ]
+    },
+    "response": {
+      "status": 201,
+      "body": "{\"id\": 1, \"nome\": \"Nova Estratégia\", \"status\": \"EM_ANDAMENTO\"}",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "url": "/api/estrategias"
+    },
+    "response": {
+      "status": 200,
+      "body": "[{\"id\": 1, \"nome\": \"Estratégia A\", \"status\": \"CONCLUIDO\"}, {\"id\": 2, \"nome\": \"Estratégia B\", \"status\": \"EM_ANDAMENTO\"}]",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "DELETE",
+      "urlPathPattern": "/api/estrategias/\\d+"
+    },
+    "response": {
+      "status": 204
+    }
+  }
+]

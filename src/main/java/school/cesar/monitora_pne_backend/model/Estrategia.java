@@ -1,29 +1,69 @@
 package school.cesar.monitora_pne_backend.model;
 
-import jakarta.persistence.*;
-import java.util.List;
+import lombok.Data;
 
-@Entity
-@Table(name = "estrategias")
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Data
 public class Estrategia {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
     private String descricao;
     private String indicador;
-
-    @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToMany(mappedBy = "estrategia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanoAcao> planos;
 
-    // Getters and setters...
-}
+    enum Status {
+        CONCLUIDO, EM_ANDAMENTO, ATRASADO
+    }
 
-enum Status {
-    CONCLUIDO, EM_ANDAMENTO, ATRASADO
+    // Construtor padrão
+    public Estrategia() {
+        this.planos = new ArrayList<>();
+    }
+
+    // Construtor com argumentos
+    public Estrategia(Long id, String nome, String descricao, String indicador, Status status) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.indicador = indicador;
+        this.status = status;
+        this.planos = new ArrayList<>();
+    }
+
+//    // Métodos de negócios
+//    public void adicionarPlano(PlanoAcao plano) {
+//        if (plano != null) {
+//            planos.add(plano);
+//            plano.setEstrategia(this); // Estabelece a relação bidirecional
+//        }
+//    }
+//
+//    public void removerPlano(PlanoAcao plano) {
+//        if (plano != null && planos.contains(plano)) {
+//            planos.remove(plano);
+//            plano.setEstrategia(null); // Remove a relação bidirecional
+//        }
+//    }
+
+    public boolean isConcluido() {
+        return Status.CONCLUIDO.equals(this.status);
+    }
+
+    public void concluir() {
+        this.status = Status.CONCLUIDO;
+    }
+
+    public void atrasar() {
+        this.status = Status.ATRASADO;
+    }
+
+    public void iniciar() {
+        this.status = Status.EM_ANDAMENTO;
+    }
+
 }

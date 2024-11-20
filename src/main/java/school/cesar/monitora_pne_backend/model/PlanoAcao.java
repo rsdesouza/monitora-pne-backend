@@ -1,12 +1,11 @@
 package school.cesar.monitora_pne_backend.model;
 
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "planos_acao")
+//@Entity
+//@Table(name = "planos_acao")
 public class PlanoAcao {
 
-    @Id
+/*    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -17,7 +16,7 @@ public class PlanoAcao {
 
     @ManyToOne
     @JoinColumn(name = "estrategia_id")
-    private Estrategia estrategia;
+    private Estrategia estrategia;*/
 
 }
 

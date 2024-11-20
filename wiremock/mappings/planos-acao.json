@@ -1,0 +1,39 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/api/planos-acao"
+      },
+      "response": {
+        "status": 200,
+        "body": "[{\"id\": 1, \"nome\": \"Plano A\", \"status\": \"EM_ANDAMENTO\", \"estrategia\": {\"id\": 1, \"nome\": \"Estratégia 1\"}}, {\"id\": 2, \"nome\": \"Plano B\", \"status\": \"CONCLUIDO\", \"estrategia\": {\"id\": 2, \"nome\": \"Estratégia 2\"}}]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "urlPath": "/api/planos-acao"
+      },
+      "response": {
+        "status": 201,
+        "body": "{\"id\": 3, \"nome\": \"Plano C\", \"status\": \"EM_ANDAMENTO\", \"estrategia\": {\"id\": 3, \"nome\": \"Estratégia 3\"}}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/api/planos-acao/\\d+"
+      },
+      "response": {
+        "status": 204
+      }
+    }
+  ]
+}

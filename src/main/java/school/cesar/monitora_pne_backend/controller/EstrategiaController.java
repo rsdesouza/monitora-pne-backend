@@ -6,28 +6,35 @@ import school.cesar.monitora_pne_backend.service.EstrategiaService;
 
 import java.util.List;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/estrategias")
 public class EstrategiaController {
 
-    private final EstrategiaService service;
+    private final EstrategiaService estrategiaService;
 
-    public EstrategiaController(EstrategiaService service) {
-        this.service = service;
+    public EstrategiaController(EstrategiaService estrategiaService) {
+        this.estrategiaService = estrategiaService;
     }
 
     @GetMapping
-    public List<Estrategia> getAll() {
-        return service.findAll();
+    public List<Estrategia> listar() throws IOException {
+        return estrategiaService.listarEstrategias();
     }
 
     @PostMapping
-    public Estrategia create(@RequestBody Estrategia estrategia) {
-        return service.save(estrategia);
+    public void adicionar(@RequestBody Estrategia estrategia) throws IOException {
+        estrategiaService.adicionarEstrategia(estrategia);
+    }
+
+    @PutMapping("/{id}")
+    public void atualizar(@PathVariable int id, @RequestBody Estrategia estrategia) throws IOException {
+        estrategiaService.atualizarEstrategia(id, estrategia);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public void excluir(@PathVariable int id) throws IOException {
+        estrategiaService.excluirEstrategia(id);
     }
 }
