@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class GCPStorageService {
+
     private final Storage storage;
 
     public GCPStorageService(Storage storage) {
