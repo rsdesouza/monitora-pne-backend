@@ -12,6 +12,6 @@ public class PlanoAcao {
     private String planoDeAcao;
     private String observacao;
     private String status;
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
+    private String dataInicio;
+    private String dataFim;
 }
