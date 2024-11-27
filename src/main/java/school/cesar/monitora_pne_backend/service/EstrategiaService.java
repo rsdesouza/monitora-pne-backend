@@ -25,6 +25,8 @@ public class EstrategiaService {
 
     public List<Estrategia> listarEstrategias() throws IOException {
         String content = storageService.readFile(bucketName, fileName);
+        System.out.println("Conteúdo do CSV:");
+        System.out.println(content);
 
         CsvMapper csvMapper = new CsvMapper();
         CsvSchema schema = CsvSchema.builder()
@@ -37,13 +39,22 @@ public class EstrategiaService {
                 .addColumn("status")
                 .build()
                 .withHeader()
-                .withColumnSeparator(';'); // Configura o separador como ponto-e-vírgula
+                .withColumnSeparator(';');
 
-        MappingIterator<Estrategia> it = csvMapper.readerFor(Estrategia.class)
-                .with(schema)
-                .readValues(content);
+        try {
+            MappingIterator<Estrategia> it = csvMapper.readerFor(Estrategia.class)
+                    .with(schema)
+                    .readValues(content);
 
-        return it.readAll();
+            List<Estrategia> estrategias = it.readAll();
+            System.out.println("Estrategias carregadas: " + estrategias.size());
+            return estrategias;
+
+        } catch (Exception e) {
+            System.err.println("Erro ao processar o CSV:");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public void adicionarEstrategia(Estrategia estrategia) throws IOException {
