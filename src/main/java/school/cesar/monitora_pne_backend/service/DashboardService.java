@@ -3,7 +3,8 @@ package school.cesar.monitora_pne_backend.service;
 import org.springframework.stereotype.Service;
 import school.cesar.monitora_pne_backend.model.Estrategia;
 import school.cesar.monitora_pne_backend.model.PlanoAcao;
-
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -18,6 +19,17 @@ public class DashboardService {
     public DashboardService(EstrategiaService estrategiaService, PlanoAcaoService planoAcaoService) {
         this.estrategiaService = estrategiaService;
         this.planoAcaoService = planoAcaoService;
+    }
+
+    private static final DateTimeFormatter CSV_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+
+    private LocalDate parseDate(String date) {
+        try {
+            return LocalDate.parse(date, CSV_DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Erro ao analisar a data: " + date, e);
+        }
     }
 
     public Map<String, Object> calculateMetrics() {
@@ -48,7 +60,7 @@ public class DashboardService {
             // Dias faltantes
             long diasFaltantes = planosAcao.stream()
                     .filter(plano -> plano.getDataFim() != null)
-                    .mapToLong(plano -> ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(plano.getDataFim())))
+                    .mapToLong(plano -> ChronoUnit.DAYS.between(LocalDate.now(), parseDate(plano.getDataFim())))
                     .filter(dias -> dias > 0)
                     .min()
                     .orElse(0);
