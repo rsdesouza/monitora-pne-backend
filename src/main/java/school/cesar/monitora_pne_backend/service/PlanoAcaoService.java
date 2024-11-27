@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class PlanoAcaoService {
 
     private final GCPStorageService storageService;
-    private final String bucketName = "monitora_pne_bucket";
+    private final String bucketName = "monitora_pne_15_streamlit";
     private final String fileName = "planoacao.csv";
 
     public PlanoAcaoService(GCPStorageService storageService) {
