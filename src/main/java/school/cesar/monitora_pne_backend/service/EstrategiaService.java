@@ -1,6 +1,8 @@
 package school.cesar.monitora_pne_backend.service;
 
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.stereotype.Service;
 import school.cesar.monitora_pne_backend.model.Estrategia;
 
@@ -23,8 +25,25 @@ public class EstrategiaService {
 
     public List<Estrategia> listarEstrategias() throws IOException {
         String content = storageService.readFile(bucketName, fileName);
-        // Converta o CSV em uma lista de objetos
-        return Collections.singletonList(new CsvMapper().convertValue(content, Estrategia.class));
+
+        CsvMapper csvMapper = new CsvMapper();
+        CsvSchema schema = CsvSchema.builder()
+                .addColumn("index")
+                .addColumn("indicador")
+                .addColumn("nomeEstrategia")
+                .addColumn("mes")
+                .addColumn("valor")
+                .addColumn("ano")
+                .addColumn("status")
+                .build()
+                .withHeader()
+                .withColumnSeparator(';'); // Configura o separador como ponto-e-vírgula
+
+        MappingIterator<Estrategia> it = csvMapper.readerFor(Estrategia.class)
+                .with(schema)
+                .readValues(content);
+
+        return it.readAll();
     }
 
     public void adicionarEstrategia(Estrategia estrategia) throws IOException {
@@ -35,18 +54,32 @@ public class EstrategiaService {
 
     public void atualizarEstrategia(int id, Estrategia estrategia) throws IOException {
         List<Estrategia> estrategias = listarEstrategias();
-        estrategias = estrategias.stream().map(e -> e.getId() == id ? estrategia : e).collect(Collectors.toList());
+        estrategias = estrategias.stream().map(e -> e.getIndex() == id ? estrategia : e).collect(Collectors.toList());
         salvarEstrategias(estrategias);
     }
 
     public void excluirEstrategia(int id) throws IOException {
         List<Estrategia> estrategias = listarEstrategias();
-        estrategias.removeIf(e -> e.getId() == id);
+        estrategias.removeIf(e -> e.getIndex() == id);
         salvarEstrategias(estrategias);
     }
 
     private void salvarEstrategias(List<Estrategia> estrategias) throws IOException {
-        String csvContent = new CsvMapper().writeValueAsString(estrategias);
+        CsvMapper csvMapper = new CsvMapper();
+        CsvSchema schema = CsvSchema.builder()
+                .addColumn("index")
+                .addColumn("indicador")
+                .addColumn("nomeEstrategia")
+                .addColumn("mes")
+                .addColumn("valor")
+                .addColumn("ano")
+                .addColumn("status")
+                .build()
+                .withHeader()
+                .withColumnSeparator(';'); // Configura o separador como ponto-e-vírgula
+
+        String csvContent = csvMapper.writer(schema).writeValueAsString(estrategias);
         storageService.writeFile(bucketName, fileName, csvContent);
     }
+
 }

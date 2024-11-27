@@ -1,22 +1,12 @@
 package school.cesar.monitora_pne_backend.model;
 
+import lombok.Data;
 
-//@Entity
-//@Table(name = "planos_acao")
+@Data
 public class PlanoAcao {
-
-/*    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String nome;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    @ManyToOne
-    @JoinColumn(name = "estrategia_id")
-    private Estrategia estrategia;*/
-
+    private String mes;
+    private int valor;
+    private int ano;
+    private Estrategia estrategia;
 }
 
