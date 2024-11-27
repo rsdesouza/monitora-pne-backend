@@ -3,9 +3,10 @@ package school.cesar.monitora_pne_backend.service;
 import org.springframework.stereotype.Service;
 import school.cesar.monitora_pne_backend.model.Estrategia;
 import school.cesar.monitora_pne_backend.model.PlanoAcao;
+
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,6 @@ public class DashboardService {
     }
 
     private static final DateTimeFormatter CSV_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private LocalDate parseDate(String date) {
         try {
@@ -43,12 +43,12 @@ public class DashboardService {
 
             // Estratégias concluídas
             long estrategiasConcluidas = estrategias.stream()
-                    .filter(e -> "CONCLUIDO".equalsIgnoreCase(e.getStatus().toString()))
+                    .filter(e -> e.getStatus() == Estrategia.Status.CONCLUIDO)
                     .count();
 
             // Estratégias descontinuadas
             long estrategiasDescontinuadas = estrategias.stream()
-                    .filter(e -> "DESCONTINUADO".equalsIgnoreCase(e.getStatus().toString()))
+                    .filter(e -> e.getStatus() == Estrategia.Status.ATRASADO)
                     .count();
 
             // Estratégias não concluídas
@@ -65,6 +65,19 @@ public class DashboardService {
                     .min()
                     .orElse(0);
 
+            // Total de planos por status
+            long planosConcluidos = planosAcao.stream()
+                    .filter(plano -> plano.getStatus() == PlanoAcao.Status.CONCLUIDO)
+                    .count();
+
+            long planosEmAndamento = planosAcao.stream()
+                    .filter(plano -> plano.getStatus() == PlanoAcao.Status.EM_ANDAMENTO)
+                    .count();
+
+            long planosDescontinuados = planosAcao.stream()
+                    .filter(plano -> plano.getStatus() == PlanoAcao.Status.DESCONTINUADO)
+                    .count();
+
             // Resultados
             return Map.of(
                     "progresso", progresso,
@@ -72,7 +85,10 @@ public class DashboardService {
                     "totalEstrategias", totalEstrategias,
                     "estrategiasDescontinuadas", estrategiasDescontinuadas,
                     "estrategiasConcluidas", estrategiasConcluidas,
-                    "estrategiasNaoConcluidas", estrategiasNaoConcluidas
+                    "estrategiasNaoConcluidas", estrategiasNaoConcluidas,
+                    "planosConcluidos", planosConcluidos,
+                    "planosEmAndamento", planosEmAndamento,
+                    "planosDescontinuados", planosDescontinuados
             );
 
         } catch (Exception e) {
