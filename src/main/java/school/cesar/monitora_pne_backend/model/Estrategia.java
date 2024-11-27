@@ -1,5 +1,6 @@
 package school.cesar.monitora_pne_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,11 @@ public class Estrategia {
     private Status status;
 
     public enum Status {
-        CONCLUIDO, EM_ANDAMENTO, ATRASADO
+        CONCLUIDO, EM_ANDAMENTO, ATRASADO;
+
+        @JsonCreator
+        public static Status fromValue(String value) {
+            return Status.valueOf(value.toUpperCase());
+        }
     }
 }
