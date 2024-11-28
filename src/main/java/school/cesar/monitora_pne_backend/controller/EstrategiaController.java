@@ -55,7 +55,7 @@ public class EstrategiaController {
     public Map<String, List<Estrategia>> obterEstrategiasPorIndicador() throws IOException {
         List<Estrategia> estrategias = estrategiaService.listarEstrategias();
         return estrategias.stream()
-                .filter(e -> e.getIndicador() != null) // Filtra estratégias com indicador nulo
+                .filter(e -> e.getIndicador() != null && !e.getIndicador().isEmpty()) // Ignora indicadores nulos ou vazios
                 .collect(Collectors.groupingBy(Estrategia::getIndicador));
     }
 
