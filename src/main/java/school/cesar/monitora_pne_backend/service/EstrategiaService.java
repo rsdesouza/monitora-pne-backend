@@ -47,6 +47,12 @@ public class EstrategiaService {
                     .readValues(content);
 
             List<Estrategia> estrategias = it.readAll();
+
+            // Filtra estratégias inválidas (indicador ou nomeEstrategia nulos)
+            estrategias = estrategias.stream()
+                    .filter(e -> e.getIndicador() != null && e.getNomeEstrategia() != null)
+                    .collect(Collectors.toList());
+
             System.out.println("Estrategias carregadas: " + estrategias.size());
             return estrategias;
 
