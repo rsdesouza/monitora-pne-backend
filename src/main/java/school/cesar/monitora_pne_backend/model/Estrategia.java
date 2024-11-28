@@ -15,7 +15,7 @@ public class Estrategia {
     private Status status;
 
     public enum Status {
-        CONCLUIDO, EM_ANDAMENTO, ATRASADO;
+        CONCLUIDO, EM_ANDAMENTO, ATRASADO, DESCONTINUADO;
 
         @JsonCreator
         public static Status fromValue(String value) {
