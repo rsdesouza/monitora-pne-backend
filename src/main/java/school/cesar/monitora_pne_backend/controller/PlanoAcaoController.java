@@ -6,6 +6,8 @@ import school.cesar.monitora_pne_backend.service.PlanoAcaoService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/planos")
@@ -35,5 +37,35 @@ public class PlanoAcaoController {
     @DeleteMapping("/{index}")
     public void excluirPlano(@PathVariable Long index) throws IOException {
         planoAcaoService.excluirPlano(index);
+    }
+
+    @GetMapping("/resumo")
+    public Map<String, Long> obterResumoPlanosAcao() throws IOException {
+        List<PlanoAcao> planos = planoAcaoService.listarPlanos();
+
+        long total = planos.size();
+        long concluidos = planos.stream()
+                .filter(p -> "CONCLUIDO".equalsIgnoreCase(String.valueOf(p.getStatus())))
+                .count();
+        long emAndamento = planos.stream()
+                .filter(p -> "EM_ANDAMENTO".equalsIgnoreCase(String.valueOf(p.getStatus())))
+                .count();
+        long atrasados = planos.stream()
+                .filter(p -> "ATRASADO".equalsIgnoreCase(String.valueOf(p.getStatus())))
+                .count();
+
+        return Map.of(
+                "total", total,
+                "concluidos", concluidos,
+                "emAndamento", emAndamento,
+                "atrasados", atrasados
+        );
+    }
+
+    @GetMapping("/indicadores")
+    public Map<String, List<PlanoAcao>> obterPlanosPorIndicador() throws IOException {
+        List<PlanoAcao> planos = planoAcaoService.listarPlanos();
+        return planos.stream()
+                .collect(Collectors.groupingBy(PlanoAcao::getIndicador));
     }
 }
