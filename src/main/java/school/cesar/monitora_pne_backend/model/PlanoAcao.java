@@ -1,7 +1,6 @@
 package school.cesar.monitora_pne_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
 @Data
@@ -19,13 +18,8 @@ public class PlanoAcao {
         CONCLUIDO, EM_ANDAMENTO, ATRASADO, DESCONTINUADO;
 
         @JsonCreator
-        public static Status fromValue(String value) {
-            return Status.valueOf(value.toUpperCase().replace(" ", "_"));
-        }
-
-        @JsonValue
-        public String toValue() {
-            return this.name().toLowerCase().replace("_", " ");
+        public static Estrategia.Status fromValue(String value) {
+            return Estrategia.Status.valueOf(value.toUpperCase());
         }
     }
 }
