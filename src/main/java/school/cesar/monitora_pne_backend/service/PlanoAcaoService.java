@@ -42,8 +42,11 @@ public class PlanoAcaoService {
                 .with(schema)
                 .readValues(content);
 
-        return it.readAll();
+        return it.readAll().stream()
+                .filter(plano -> plano.getIndicador() != null && !plano.getIndicador().isBlank()) // Filtra nulos ou vazios
+                .collect(Collectors.toList());
     }
+
 
     public void adicionarPlano(PlanoAcao plano) throws IOException {
         List<PlanoAcao> planos = listarPlanos();
