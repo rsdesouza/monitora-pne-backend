@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200") // Permite acesso do frontend
+                        .allowedOrigins("https://monitora-pne-frontend.web.app") // Permite acesso do frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
         };
